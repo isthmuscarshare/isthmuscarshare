@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+ @license
+ Copyright 2019 Google LLC. All Rights Reserved.
+ SPDX-License-Identifier: Apache-2.0
+-->
+<html>
+
+  <head>
+    <title>Carshare Price Estimates</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <!-- Set style file (style.css) and javascript files here -->
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="module" src="./trip_planner_chatgpt.js"></script>
+  </head>
+  <body>
+    
+    <style>
+      /* Add CSS styles to increase the font size */
+      #floating-panel b {
+        font-size: 16px; /* Adjust the font size as needed */
+        margin-bottom: 20px; /* Adjust the margin-bottom value as needed */
+      }
+      #end {
+        font-size: 16px; /* Adjust the font size as needed */
+      }
+    </style>
+    <div id="floating-panel">
+      <b>Which car?</b>
+      <select id="start" style="font-size: 16px;">
+        <option value="1316 East Mifflin St, Madison, WI" selected>Car 1</option>
+        <option value="Christ Presbyterian Church, Madison, WI">Car 2</option>
+      </select>
+      <br>
+      <br>
+      <b>Destination:</b>
+      <input style="font-size: 16px;"
+        id="end"
+        class="controls"
+        type="text"
+        placeholder="Enter destination"
+      />
+
+      <p style="font-size:16px; font-weight: bold;">How long do you plan to stay there?</p>
+
+      <select id="time_dropdown" style="font-size: 16px;">
+        <option value=0.0>0 hours</option>
+        <option value=1.0 selected>1 hour</option>
+        <option value=2.0>2 hours</option>
+        <option value=3.0>3 hours</option>
+        <option value=4.0>4 hours</option>
+        <option value=5.0>5 hours</option>
+        <option value=6.0>6 hours</option>
+        <option value=7.0>7 hours</option>
+      </select>
+      <p><br></p>
+      <h3 style="font-size: 16px; text-align: center;">Cost Estimate</h3>
+
+      <div class="row">
+        <div class="column" style="background-color:#c4bebe;">
+          <h2 style="font-size: 16px;">ZipCar</h2>
+          <p style="font-size: 14px;"><span style="font-size: 14px;" id="travelstatszc"></span><br><br></p>
+          <h3 style="font-size: 14px; text-align: center;">Pricing</h3>
+          <p>$14/hour*<br>$0.58/mile^<br><br></p>
+          <p style="font-size:10px; text-align: left;">*estimated<br>^for every mile over 180 miles/day</p>
+        </div>
+        <div class="column" style="background-color:#b4f4d4;">
+          <h2 style="font-size: 16px;">Isthmus Carshare</h2>
+          <p style="font-size: 14px;"><span style="font-size: 14px;" id="travelstatsdb"></span><br><br></p>
+          <h3 style="font-size: 1px; text-align: center;">Pricing</h3>
+          <p>$2/hour<br>$0.45/mile</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyElopaaf5sTtjC0rIQQnkW0ZNDWYtQJk&callback=initMap&libraries=places&v=weekly"></script>
+
+    </body>
+  </html>
+
+
+
