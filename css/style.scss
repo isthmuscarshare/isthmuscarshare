@@ -1,6 +1,7 @@
 $white: #ffffff;
 $black: #000000;
-$primary1: #f7444e;
+// $primary1: #f7444e;
+$primary1: #184592;
 $primary2: #002c3e;
 $textCol: #1f1f1f;
 
@@ -689,6 +690,20 @@ a:focus {
   }
 
 }
+
+.inner_page_head {
+  background: #f7444e;
+  text-align: center;
+  color: #fff;
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+
+.inner_page_head h3 {
+  font-size: 42px;
+  font-weight: 800;
+}
+
 
 // end client section
 
