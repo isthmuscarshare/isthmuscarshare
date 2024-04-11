@@ -10,7 +10,7 @@
       <meta name="keywords" content="" />
       <meta name="description" content="" />
       <meta name="author" content="" />
-      <!-- <link rel="shortcut icon" href="images/favicon.png" type=""> -->
+      <link rel="shortcut icon" href="images/carshare_favicon.png" type="">
       <title>Isthmus Carshare</title>
       <!-- bootstrap core css -->
       <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -24,10 +24,55 @@
    <body>
       <div class="hero_area">
          <!-- header section strats -->
+
          <header class="header_section">
             <div class="container">
+              <nav class="navbar navbar-expand-lg custom_nav-container">
+                <a class="navbar-brand" href="index.html"><img width="250" src="images/IsthmusLogo.png" alt="#" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Manage Reservation
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                        <a class="dropdown-item" href="calendar.html">Calendar</a>
+                        <a class="dropdown-item" href="new_reservation.html">New Reservation</a>
+                        <!-- <a class="dropdown-item" href="cancel_reservation.html">Cancel Reservation</a>
+                        <a class="dropdown-item" href="modify_reservation.html">Modify Reservation</a> -->
+                      </div>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="trip_planner/trip_planner.html">Trip Planner</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="https://why.isthmuscarshare.com">Why Carshare?</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Contact
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                        <!-- <a class="dropdown-item" href="#">Trip Feedback</a> -->
+                        <a class="dropdown-item" href="FAQ.html">FAQ</a>
+                        <a class="dropdown-item" href="join.html">Join Now</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
+          </header>
+         <!-- <header class="header_section">
+            <div class="container">
                <nav class="navbar navbar-expand-lg custom_nav-container ">
-                  <!-- <a class="navbar-brand" href="index.html"><img width="250" src="images/logo.png" alt="#" /></a> -->
+                  <a class="navbar-brand" href="index.html"><img width="250" src="images/IsthmusLogo.png" alt="#" /></a>
                   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class=""> </span>
                   </button>
@@ -41,20 +86,17 @@
                            <ul class="dropdown-menu">
                               <li><a href="calendar.html">Calendar</a></li>
                               <li><a href="new_reservation.html">New Reservation</a></li>
-                              <!-- <li><a href="cancel_reservation.html">Cancel Reservation</a></li>
-                              <li><a href="modify_reservation.html">Modify Reservation</a></li> -->
                            </ul>
                         </li>
                         <li class="nav-item">
                            <a class="nav-link" href="trip_planner/trip_planner.html">Trip Planner</a>
                         </li>
                         <li class="nav-item">
-                           <a class="nav-link" href="https://stedn.github.io/down-the-block/">Why Carshare?</a>
+                           <a class="nav-link" href="https://why.isthmuscarshare.com">Why Carshare?</a>
                         </li>
                         <li class="nav-item dropdown">
                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Contact <span class="caret"></span></a>
                            <ul class="dropdown-menu">
-                              <!-- <li><a href="">Trip Feedback</a></li> -->
                               <li><a href="FAQ.html">FAQ</a></li>
                               <li><a href="join.html">Join Now</a></li>
                            </ul>
@@ -63,8 +105,54 @@
                   </div>
                </nav>
             </div>
-         </header>
+         </header> -->
          <!-- end header section -->
+         <style>
+         .slider_section {
+            position: relative;
+          }
+          .slider_bg_box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            z-index: -1;
+          }
+          .slider_bg_box img {
+            width: 100%;
+            height: auto;
+          }
+          .detail-box {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+          .carousel-item {
+            padding-bottom: 20px;
+          }
+          .col-md-7, .col-lg-6 {
+            width: 100%;
+          }
+          .btn-box {
+            margin-top: 20px;
+            text-align: center;
+          }
+          .btn1 {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+          }
+          @media (min-width: 768px) {
+            .col-md-7, .col-lg-6 {
+              width: 50%;
+            }
+          }
+         </style>
          <!-- slider section -->
          <section class="slider_section ">
             <div class="slider_bg_box">
@@ -143,7 +231,7 @@
                                 
                                  </p>
                                  <div class="btn-box">
-                                    <a href="https://stedn.github.io/down-the-block/" class="btn1">
+                                    <a href="https://why.isthmuscarshare.com" class="btn1">
                                        Why Carshare?
                                     </a>
                                  </div>
@@ -174,6 +262,9 @@
                <h2>
                   Our <span> cars</span>
                </h2>
+               <p>
+                  (We don't own these yet, but these are the types of cars we plan to buy)
+               </p>
             </div>
             <div class="row">
                <div class="col-sm-6 col-md-4 col-lg-4">
@@ -446,10 +537,10 @@
                         Contact
                      </h4>
                      <div class="contact_link_box">
-                        <a href="mailto:madison-carshare@gmail.com">
+                        <a href="mailto:isthmuscarshare@gmail.com">
                         <i class="fa fa-envelope" aria-hidden="true"></i>
                         <span>
-                        madison-carshare@gmail.com
+                        isthmuscarshare@gmail.com
                         </span>
                         </a>
                      </div>
