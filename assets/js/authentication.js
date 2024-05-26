@@ -18,22 +18,48 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const analytics = getAnalytics(app)
+export const auth = getAuth(app);
 
 export const trySignIn = () => {
-    const auth = getAuth(app);
     const email = document.getElementById("email-input").value
     const password = document.getElementById("password-input").value
     signInWithEmailAndPassword(auth, email, password)
-        .then((userCredentials) => {
-            const user = userCredentials.user
-            console.log(`Email: ${user.email}`);
-            console.log(`Other: ${user.uid}`);
+        .then((_userCredentials) => {
+            //Navigate back to home page
+            window.location = "/index.html"
         })
         .catch((error) => {
             console.error(error);
         })
 }
 
-const submitButton = document.getElementById("submit-button")
-submitButton.onclick = trySignIn
+/**
+ * A function that takes a callback to call when the auth state changes.
+ * Specifically, if a user signs in, then we call the callback with the signed in
+ * user's name, or their email if that is not available, If the user signs out,
+ * we call the callback with null
+ **/
+export const updateName = (nameChangeCallback) => {
+    var name = null
+    auth.onAuthStateChanged((user) => {
+        if(user != null){
+            const info = user.providerData
+                .filter(x => x.providerId === "password")
+            if(info.length > 0 && info[0].displayName){
+                name = info[0].displayName
+            }
+            else{
+                name = user.email
+            }
+        }
+        else{
+            name = null;
+        }
+        nameChangeCallback(name)
+    })
+}
+
+export const signOut = async () => {
+    await auth.signOut()
+}
