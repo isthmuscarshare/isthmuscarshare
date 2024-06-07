@@ -91,6 +91,49 @@
         .faq-answer {
             margin-bottom: 20px;
         }
+
+
+        .abt-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .abt-img {
+            float: left;
+            margin-right: 20px; /* Adjust as needed */
+        }
+
+        .abt-img img{
+          width: 150px;
+        }
+
+        .abt-content {
+            flex-grow: 1; /* Allows content to fill remaining space */
+        }
+
+        .abt-question {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .abt-answer {
+            margin-bottom: 20px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .abt-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .abt-img {
+                margin-right: 0; /* Remove right margin */
+                margin-bottom: 20px; /* Add bottom margin for spacing */
+            }
+        }
     </style>
     <style>
         /* Center the iframe */
