@@ -1,0 +1,99 @@
+<script>
+    submitted=false;
+</script>
+
+
+<div class="section-subheading text-muted" id="success" style="display:none;"><h4>Thanks for signing up! Check your email for the reservation details. Reload this page to submit another reservation.</h4></div>
+<div class="container" id="wholeForm">
+  <h2>Reservation Form</h2>
+  <p>For a multi-day reservation please use this form instead:</p>
+  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd_dbLu9mEUznwakTOYJmZHXFDfuogSocV0DKhPlreWC3ncWA/formResponse" method="POST" id="myForm" target="hidden_iframe" onsubmit="submitted=true;">
+    <div class="form-group" style="display:none">
+      <label for="car">Which Car:</label>
+      <input type="text" class="form-control" id="car" name="entry.361216248" value="Car 1" required>
+    </div>
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <div class="input-group">
+        <input type="text" class="form-control datepicker" id="date" name="entry.1160707494" placeholder="Select date" required>
+        <div class="input-group-append">
+          <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="startTime">Start Time:</label>
+      <select class="form-control" id="startTime" name="entry.949740202" required>
+        <option value="00:00">12:00 AM</option>
+        <option value="01:00">1:00 AM</option>
+        <option value="02:00">2:00 AM</option>
+        <option value="03:00">3:00 AM</option>
+        <option value="04:00">4:00 AM</option>
+        <option value="05:00">5:00 AM</option>
+        <option value="06:00">6:00 AM</option>
+        <option value="07:00">7:00 AM</option>
+        <option value="08:00">8:00 AM</option>
+        <option value="09:00">9:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option>
+        <option value="13:00">1:00 PM</option>
+        <option value="14:00">2:00 PM</option>
+        <option value="15:00">3:00 PM</option>
+        <option value="16:00">4:00 PM</option>
+        <option value="17:00">5:00 PM</option>
+        <option value="18:00">6:00 PM</option>
+        <option value="19:00">7:00 PM</option>
+        <option value="20:00">8:00 PM</option>
+        <option value="21:00">9:00 PM</option>
+        <option value="22:00">10:00 PM</option>
+        <option value="23:00">11:00 PM</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="endTime">End Time:</label>
+      <select class="form-control" id="endTime" name="entry.288916483" required>
+        <option value="00:00">12:00 AM</option>
+        <option value="01:00">1:00 AM</option>
+        <option value="02:00">2:00 AM</option>
+        <option value="03:00">3:00 AM</option>
+        <option value="04:00">4:00 AM</option>
+        <option value="05:00">5:00 AM</option>
+        <option value="06:00">6:00 AM</option>
+        <option value="07:00">7:00 AM</option>
+        <option value="08:00">8:00 AM</option>
+        <option value="09:00">9:00 AM</option>
+        <option value="10:00">10:00 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:00">12:00 PM</option>
+        <option value="13:00">1:00 PM</option>
+        <option value="14:00">2:00 PM</option>
+        <option value="15:00">3:00 PM</option>
+        <option value="16:00">4:00 PM</option>
+        <option value="17:00">5:00 PM</option>
+        <option value="18:00">6:00 PM</option>
+        <option value="19:00">7:00 PM</option>
+        <option value="20:00">8:00 PM</option>
+        <option value="21:00">9:00 PM</option>
+        <option value="22:00">10:00 PM</option>
+        <option value="23:00">11:00 PM</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="text" class="form-control" id="email" name="entry.430692538" placeholder="Enter your email" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display: none;" onload="if(submitted)  {document.getElementById('wholeForm').style.display='none'; document.getElementById('success').style.display='block';}"></iframe>
+
+
+<script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+    });
+</script>
