@@ -12,6 +12,52 @@
       <label for="car">Which Car:</label>
       <input type="text" class="form-control" id="car" name="entry.361216248" value="Car 1" required>
     </div>
+    <style>
+      .form-group {
+          margin-bottom: 15px;
+      }
+      .input-group {
+          position: relative;
+      }
+      .input-group .datepicker {
+          width: calc(100% - 35px);
+      }
+      .input-group-append {
+          position: absolute;
+          right: 0;
+          top: 0;
+          height: 100%;
+      }
+      .input-group-text {
+          background-color: #e9ecef;
+          border: 1px solid #ced4da;
+          border-radius: 0.25rem;
+          padding: 0.375rem 0.75rem;
+          cursor: pointer;
+      }
+      .ui-datepicker {
+          z-index: 1000 !important; /* Ensures the datepicker appears above other elements */
+      }
+      .ui-datepicker table {
+          background: #fff; /* White background for better readability */
+      }
+      .ui-datepicker .ui-datepicker-header {
+          background: #007bff; /* Blue header for contrast */
+          color: #fff;
+      }
+      .ui-datepicker .ui-state-default {
+          background: #e9ecef; /* Light grey background for dates */
+          color: #000;
+      }
+      .ui-datepicker .ui-state-highlight {
+          background: #007bff; /* Highlight current date with blue */
+          color: #fff;
+      }
+      .ui-datepicker .ui-state-active {
+          background: #0056b3; /* Darker blue for selected date */
+          color: #fff;
+      }
+    </style>
     <div class="form-group">
       <label for="date">Date:</label>
       <div class="input-group">
