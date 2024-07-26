@@ -90,7 +90,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="errorModalLabel">Error</h5>
+        <h5 class="modal-title" id="errorModalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -102,8 +102,17 @@
     </div>
   </div>
 </div>
-<iframe name="hidden_iframe" id="hidden_iframe" style="display: none;" onload="if(submitted)  {document.getElementById('wholeForm').style.display='none'; document.getElementById('success').style.display='block';}"></iframe>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display: none;" onload="if(submitted)  {document.getElementById('wholeForm').style.display='none'; document.getElementById('success').style.display='block'; setTimeout(function (){document.getElementById('calendar-iframe').src = document.getElementById('calendar-iframe').src;}, 5000);}"></iframe>
+<style>
+  #spinnerOverlay {
+    z-index: 1000; /* Ensure the spinner appears above other content */
+  }
 
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+</style>
 
 <script>
     $(document).ready(function(){
@@ -114,49 +123,71 @@
     });
 </script>
 
+
+<script type="module" src="./assets/js/form.js"></script>
+
 <script src="https://apis.google.com/js/api.js"></script>
 <script>
+window.addEventListener('load', function () {
+  const apikey = window.constants.API_KEY;
+  const calendarId = window.constants.CALENDAR_ID;
 
-function showErrorModal(message) {
-    document.getElementById('errorModalMessage').textContent = message; // Set error message in modal
-    const modal = new bootstrap.Modal(document.getElementById('errorModal')); // Create new modal instance
-    modal.show(); // Show the modal
-}
+  function showErrorModal(message) {
+        document.getElementById('errorModalMessage').textContent = message; // Set error message in modal
+        modal = new bootstrap.Modal(document.getElementById('errorModal')); // Create new modal instance
+        modal.show();
+  }
 
-const API_KEY = 'AIzaSyDtosygtS3MAVJrKS2rDAbASwsX1zhY_iE';
-const calendarId = '51070b07c25cc51448c77a0fb0364e16cb1737144a882e3302ee745fa316e600@group.calendar.google.com';
+  function hideErrorModal() {
+        modal.hide();
+  }
 
-function check_calendar(){
-  const selectedDate = document.getElementById('date').value // Assuming 'date' is the ID of your date input field
-  const startTimeString = document.getElementById('startTime').value // Value like 2:00 PM
-  const endTimeString = document.getElementById('endTime').value // Value like 4:00 PM
+  function check_calendar(){
+    const selectedDate = document.getElementById('date').value // Assuming 'date' is the ID of your date input field
+    const startTimeString = document.getElementById('startTime').value // Value like 2:00 PM
+    const endTimeString = document.getElementById('endTime').value // Value like 4:00 PM
 
-  let startDateTime = new Date(selectedDate + ' ' + startTimeString)
-  startDateTime.setMinutes(startDateTime.getMinutes() - 1)
+    let startDateTime = new Date(selectedDate + ' ' + startTimeString)
+    let endDateTime = new Date(selectedDate + ' ' + endTimeString)
 
-  let endDateTime = new Date(selectedDate + ' ' + endTimeString)
-  endDateTime.setMinutes(endDateTime.getMinutes() + 1)
+    if (startDateTime >= endDateTime) {
+      showErrorModal('End Time must be after Start Time.  Please revise your reservation start time to be before your end time')
+      return
+    }
 
-  const startIsoDateTime = startDateTime.toISOString()
-  const endIsoDateTime = endDateTime.toISOString()
+    startDateTime.setMinutes(startDateTime.getMinutes() - 1)
+    endDateTime.setMinutes(endDateTime.getMinutes() + 1)
 
-  fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${API_KEY}&timeMin=${startIsoDateTime}&timeMax=${endIsoDateTime}`)
-      .then(response => response.json())
-      .then(data => {
-          console.log(data.items.len)
-          console.log(data.items)
-          if(data.items.length>0){
-            showErrorModal('The car was already reserved during that time.  Please consult the calendar below and choose a different time.');
-            submitted = false
-          }else{
-            submitted = true
-          }
-          // Process the events as needed
-      })
-      .catch(error => {
-          console.error('Error fetching events:', error)
-      });
-}
+    if (startDateTime < new Date()) {
+      showErrorModal('Cannot check out car before current time.  Please revise your start time to be after '+ (new Date()).toLocaleString())
+      return
+    }
 
+    const startIsoDateTime = startDateTime.toISOString()
+    const endIsoDateTime = endDateTime.toISOString()
+
+    fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apikey}&timeMin=${startIsoDateTime}&timeMax=${endIsoDateTime}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.items.len)
+            console.log(data.items)
+            if(data.items.length>0){
+              showErrorModal('The car was already reserved during that time.  Please consult the calendar below and choose a different time.')
+              submitted = false
+            }else{
+              submitted = true
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error)
+        });
+
+    showErrorModal('Submission in progress. Wait one moment.')
+    hideErrorModal() 
+    setTimeout(function (){
+      hideErrorModal()
+    }, 4000);
+  }
+})
 
 </script>
