@@ -7,7 +7,7 @@
 <div class="container" id="wholeForm">
   <h2>Reservation Form</h2>
   <p>For a multi-day reservation please email <strong>isthmuscarshare@gmail.com</strong></p>
-  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd_dbLu9mEUznwakTOYJmZHXFDfuogSocV0DKhPlreWC3ncWA/formResponse" method="POST" id="myForm" target="hidden_iframe" onsubmit="check_calendar()">
+  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd_dbLu9mEUznwakTOYJmZHXFDfuogSocV0DKhPlreWC3ncWA/formResponse" method="POST" id="myForm" target="hidden_iframe">
     <div class="form-group" style="display:none">
       <label for="car">Which Car:</label>
       <input type="text" class="form-control" id="car" name="entry.361216248" value="Car 1" required>
@@ -127,67 +127,3 @@
 <script type="module" src="./assets/js/form.js"></script>
 
 <script src="https://apis.google.com/js/api.js"></script>
-<script>
-window.addEventListener('load', function () {
-  const apikey = window.constants.API_KEY;
-  const calendarId = window.constants.CALENDAR_ID;
-
-  function showErrorModal(message) {
-        document.getElementById('errorModalMessage').textContent = message; // Set error message in modal
-        modal = new bootstrap.Modal(document.getElementById('errorModal')); // Create new modal instance
-        modal.show();
-  }
-
-  function hideErrorModal() {
-        modal.hide();
-  }
-
-  function check_calendar(){
-    const selectedDate = document.getElementById('date').value // Assuming 'date' is the ID of your date input field
-    const startTimeString = document.getElementById('startTime').value // Value like 2:00 PM
-    const endTimeString = document.getElementById('endTime').value // Value like 4:00 PM
-
-    let startDateTime = new Date(selectedDate + ' ' + startTimeString)
-    let endDateTime = new Date(selectedDate + ' ' + endTimeString)
-
-    if (startDateTime >= endDateTime) {
-      showErrorModal('End Time must be after Start Time.  Please revise your reservation start time to be before your end time')
-      return
-    }
-
-    startDateTime.setMinutes(startDateTime.getMinutes() - 1)
-    endDateTime.setMinutes(endDateTime.getMinutes() + 1)
-
-    if (startDateTime < new Date()) {
-      showErrorModal('Cannot check out car before current time.  Please revise your start time to be after '+ (new Date()).toLocaleString())
-      return
-    }
-
-    const startIsoDateTime = startDateTime.toISOString()
-    const endIsoDateTime = endDateTime.toISOString()
-
-    fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apikey}&timeMin=${startIsoDateTime}&timeMax=${endIsoDateTime}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.items.len)
-            console.log(data.items)
-            if(data.items.length>0){
-              showErrorModal('The car was already reserved during that time.  Please consult the calendar below and choose a different time.')
-              submitted = false
-            }else{
-              submitted = true
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error)
-        });
-
-    showErrorModal('Submission in progress. Wait one moment.')
-    hideErrorModal() 
-    setTimeout(function (){
-      hideErrorModal()
-    }, 4000);
-  }
-})
-
-</script>
