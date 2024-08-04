@@ -2,7 +2,7 @@
 layout: default
 ---
 <section class="main-part">
-    <div class="container">
+    <div id="login-form" class="container">
         <div class="mb-3"></div>
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="email-input" aria-label="Email" aria-describedby="email-label" placeholder="abc@xyz.com">
@@ -18,3 +18,16 @@ layout: default
     </div>
 </section>
 <script type="module" src="./assets/js/login.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('login-form');
+
+        // Add event listener for keydown event on the form
+        form.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default submission
+                document.getElementById('submit-button').click(); // Click the hidden submit button
+            }
+        });
+    });
+</script>

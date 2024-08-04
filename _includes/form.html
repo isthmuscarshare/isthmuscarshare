@@ -6,8 +6,8 @@
 <div class="section-subheading text-muted" id="success" style="display:none;"><h4>Thanks for signing up! Check your email for the reservation details. Reload this page to submit another reservation.</h4></div>
 <div class="container" id="wholeForm">
   <h2>Reservation Form</h2>
-  <p>For a multi-day reservation please use this form instead:</p>
-  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd_dbLu9mEUznwakTOYJmZHXFDfuogSocV0DKhPlreWC3ncWA/formResponse" method="POST" id="myForm" target="hidden_iframe" onsubmit="submitted=true;">
+  <p>For a multi-day reservation please email <strong>isthmuscarshare@gmail.com</strong></p>
+  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd_dbLu9mEUznwakTOYJmZHXFDfuogSocV0DKhPlreWC3ncWA/formResponse" method="POST" id="myForm" target="hidden_iframe">
     <div class="form-group" style="display:none">
       <label for="car">Which Car:</label>
       <input type="text" class="form-control" id="car" name="entry.361216248" value="Car 1" required>
@@ -132,8 +132,33 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
-<iframe name="hidden_iframe" id="hidden_iframe" style="display: none;" onload="if(submitted)  {document.getElementById('wholeForm').style.display='none'; document.getElementById('success').style.display='block';}"></iframe>
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="errorModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="errorModalMessage">Error message goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<iframe name="hidden_iframe" id="hidden_iframe" style="display: none;" onload="if(submitted)  {document.getElementById('wholeForm').style.display='none'; document.getElementById('success').style.display='block'; setTimeout(function (){document.getElementById('calendar-iframe').src = document.getElementById('calendar-iframe').src;}, 5000);}"></iframe>
+<style>
+  #spinnerOverlay {
+    z-index: 1000; /* Ensure the spinner appears above other content */
+  }
 
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+</style>
 
 <script>
     $(document).ready(function(){
@@ -143,3 +168,8 @@
         });
     });
 </script>
+
+
+<script type="module" src="./assets/js/form.js"></script>
+
+<script src="https://apis.google.com/js/api.js"></script>
