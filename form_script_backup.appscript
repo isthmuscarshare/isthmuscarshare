@@ -1,0 +1,190 @@
+// Function to generate an access token for accessing the Igloo Home API.
+// Sends a POST request to the Igloo Home authentication endpoint with client credentials.
+// Retrieves an access token and stores it in the script properties along with its expiration time.
+function generateToken() {
+  var clientId = "igloohome client id"
+  var clientSecret = "igloohome client secret";
+
+  var credentials = Utilities.base64Encode(clientId + ":" + clientSecret);
+
+  var headers = {
+    "Authorization": "Basic " + credentials,
+    "Content-Type": "application/x-www-form-urlencoded"
+  };
+
+  var payload = {
+    "grant_type": "client_credentials",
+    "scope": "igloohomeapi/algopin-hourly igloohomeapi/get-devices"
+  };
+
+  var options = {
+    "method": "post",
+    "headers": headers,
+    "payload": payload
+  };
+
+  var response = UrlFetchApp.fetch("https://auth.igloohome.co/oauth2/token", options);
+  var jsonResponse = JSON.parse(response.getContentText());
+
+  var futureDate = new Date((new Date()).getTime() + (23 * 60 * 60 * 1000)); // Add 24 hours to the current date
+  jsonResponse.expiration = futureDate.toISOString()
+  
+  // Store the response in Properties Service
+  PropertiesService.getScriptProperties().setProperty('tokenResponse', JSON.stringify(jsonResponse));
+  return jsonResponse.access_token
+}
+
+// Function to retrieve the access token from the script properties.
+// If the access token is not available or has expired, it calls the generateToken() function to obtain a new access token.
+// returns: string (stored access token from Igloo Home)
+function getAccessToken() {
+  var storedResponse = PropertiesService.getScriptProperties().getProperty('tokenResponse');
+  if (storedResponse) {
+    var jsonResponse = JSON.parse(storedResponse);
+    if (new Date() < new Date(jsonResponse.expiration)){
+      return jsonResponse.access_token;
+    }
+  }
+  return generateToken()
+}
+
+// Function to handle form submission event.
+// Retrieves necessary information from the form response, interacts with the Igloo Home API to generate access pins,
+// and sends an email containing the access pin to the provided email address.
+// input: e FormResponse
+function onFormSubmit(e) {
+
+  var formResponse = e.response;
+  var itemResponses = formResponse.getItemResponses();
+  var emailAddress = ""
+  // Assuming the email address is in the first question of the form
+  for (var i = 0; i < itemResponses.length; i++) {
+    console.log(itemResponses[i].getItem().getIndex())
+    console.log(itemResponses[i].getResponse())
+    switch (itemResponses[i].getItem().getIndex()) {
+      case 0:
+        car = itemResponses[i].getResponse();  // returns a string
+        break;
+      case 1:
+        date = itemResponses[i].getResponse();  // returns a string
+        break;
+      case 3:
+        time = itemResponses[i].getResponse();  // returns a string
+        break;
+      case 4:
+        endTime = itemResponses[i].getResponse();  // returns a string
+        break;
+      case 5:
+        emailAddress = itemResponses[i].getResponse();  // returns a string
+        break;
+    }
+  }
+  if (emailAddress==""){
+    return
+  }
+  
+  var access_token = getAccessToken()
+  
+  var device_id = "igloohome device ID";
+
+  var ct_timezone = "America/Chicago";
+  
+  var  start_time_ct = new Date();
+  var  end_event_time_ct = new Date();
+  // Get current time in Central Time
+  if (date!="" && time != ""){  
+    start_time_ct = new Date(date+" "+time);
+  }
+
+  if (date!="" && endTime != ""){  
+    end_event_time_ct = new Date(date+" "+endTime);
+  }
+  console.log(start_time_ct)
+
+  start_time_ct = Utilities.formatDate(start_time_ct, ct_timezone, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  
+  // Calculate the start and end times
+  start_time_ct = new Date(start_time_ct);
+  start_time_ct.setMinutes(0);
+  start_time_ct.setSeconds(0);
+  start_time_ct.setMilliseconds(0);
+  
+  var offsetMinutes = -start_time_ct.getTimezoneOffset(); // Note: We negate the offset to represent it in the format +/-HH:mm
+
+  // Calculate the offset hours and minutes
+  var offsetHours = Math.floor(offsetMinutes / 60);
+  
+  // Format the offset string
+  var tz_append = (offsetHours >= 0 ? '+' : '-') + Utilities.formatString("%02d",Math.abs(offsetHours)) + ':00';
+  
+  var end_time_ct = new Date(start_time_ct.getTime() + (60 * 60 * 1000));
+
+  // Convert times to ISO 8601 format
+  var start_time_iso = Utilities.formatDate(start_time_ct, "GMT", "yyyy-MM-dd'T'HH:mm:ss")+tz_append;
+  var end_time_iso = Utilities.formatDate(end_time_ct, "GMT", "yyyy-MM-dd'T'HH:mm:ss")+tz_append;
+
+  var calendarId = 'google calendar id@group.calendar.google.com'; // Replace with your calendar ID
+  var eventName = 'Car Checkout'; // Event name
+  var eventDescription = 'Checkout of car for '+emailAddress; // Event description
+  end_event_time_ct = Utilities.formatDate(end_event_time_ct, ct_timezone, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  end_event_time_ct = new Date(end_event_time_ct);
+  var end_event_time_iso = Utilities.formatDate(end_event_time_ct, "GMT", "yyyy-MM-dd'T'HH:mm:ss")+tz_append;
+  
+  if (new Date(start_time_iso) < new Date((new Date()).getTime() - (60 * 60 * 1000))){
+    console.log('SUBMISSION TOO EARLY')
+    return
+  }
+
+  // Create a calendar event
+  var calendar = CalendarApp.getCalendarById(calendarId);
+
+  // Chad -- before creating a new event, check and make sure there isn't an existing event 
+  // with a time overlap
+  var existing_events = calendar.getEvents(new Date(start_time_iso), new Date(end_event_time_iso));
+  if (existing_events.length > 0) {
+    // Print out an error
+    Logger.log("Can't book car. This time slot overlaps with someone's previous booking.")
+  }
+  else {
+    event = calendar.createEvent(eventName, new Date(start_time_iso), new Date(end_event_time_iso), {
+      description: eventDescription
+    });
+    eventId = event.getId()
+  }
+
+  
+  var algopin_url = "https://api.igloodeveloper.co/igloohome/devices/" + device_id + "/algopin/hourly";
+  var headers = {
+    "Accept": "application/json, application/xml",
+    "Authorization": "Bearer " + access_token,
+    "Content-Type": "application/json"
+  };
+  var data = {
+    "variance": 1,
+    "startDate": start_time_iso,
+    "endDate": end_time_iso,
+    "accessName": "Claire"
+  };
+
+  var options = {
+    "method": "post",
+    "headers": headers,
+    "payload": JSON.stringify(data)
+  };
+
+  var algopin_response = UrlFetchApp.fetch(algopin_url, options);
+  Logger.log(algopin_response.getContentText()); // Assuming the response is JSON
+  pin_code = JSON.parse(algopin_response.getContentText()).pin
+
+  var formUrl = "https://docs.google.com/forms/d/e/CANCELLATION_FORM_ID/viewform?entry.869693777="+eventId
+
+  var subject = "Carshare passcode code";
+  var body = "Your passcode for the lockbox for "+car+" on "+date+" at "+ time+" is: "+pin_code.substring(0, 3)+'-'+pin_code.substring(3, 6)+'-'+pin_code.substring(6, 9)// +'\n Cancellation form: '+formUrl;
+
+  MailApp.sendEmail({
+    to: emailAddress,
+    subject: subject,
+    htmlBody: body + "\nFollow <a href='"+formUrl+"'>this link</a> to cancel.",
+    from: "Isthmus Carshare <madison.carshare@gmail.com>"
+  });
+}
